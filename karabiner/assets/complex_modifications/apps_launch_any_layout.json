@@ -1,0 +1,110 @@
+{
+  "title": "Launch apps from any layout (Safari, Brave, Chrome, Finder, VS Code, PyCharm, Mail, Slack, Telegram, Figma, Sublime, iTerm, Activity Monitor)",
+  "rules": [
+    {
+      "description": "right_command + backslash -> Firefox",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "backslash",
+            "modifiers": {
+              "mandatory": [
+                "right_command"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open '/Applications/Firefox.app'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "right_command + ] -> Alacritty",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "close_bracket",
+            "modifiers": {
+              "mandatory": [
+                "right_command"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open '/Applications/Alacritty.app'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "right_command + [ -> VS Code",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "open_bracket",
+            "modifiers": {
+              "mandatory": [
+                "right_command"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open '/Applications/Visual Studio Code.app'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "right_command + \" -> Obsidian",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "quote",
+            "modifiers": {
+              "mandatory": [
+                "right_command"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open '/Applications/Obsidian.app'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "right_command + l -> Spotify",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "l",
+            "modifiers": {
+              "mandatory": [
+                "right_command"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "open '/Applications/Spotify.app'"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

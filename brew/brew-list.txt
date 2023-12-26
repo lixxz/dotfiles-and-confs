@@ -1,0 +1,31 @@
+
+==> Formulae
+autoconf                        graphite2                       libusb                          nettle                          python@3.12
+bat                             harfbuzz                        libuv                           nmap                            pyyaml
+brotli                          htop                            libvorbis                       node                            qemu
+c-ares                          hugo                            libvterm                        oniguruma                       readline
+ca-certificates                 icu4c                           libx11                          openjdk                         ripgrep
+cairo                           joker                           libxau                          openssl@1.1                     six
+capstone                        jpeg-turbo                      libxcb                          openssl@3                       snappy
+cmake                           jq                              libxdmcp                        opus                            sqlite
+coursier                        krb5                            libxext                         p11-kit                         telnet
+datasette                       lame                            libxrender                      pcre                            tmux
+dtc                             libevent                        libyaml                         pcre2                           tmux-mem-cpu-load
+fd                              libidn2                         little-cms2                     pixman                          tree-sitter
+flac                            liblinear                       lua                             pkg-config                      unbound
+fluid-synth                     libnghttp2                      luajit                          podman                          unibilium
+flyctl                          libogg                          luajit-openresty                portaudio                       utf8proc
+fontconfig                      libpng                          luv                             postgresql@14                   uvicorn
+freetype                        libpthread-stubs                lz4                             protobuf                        vde
+fzf                             libslirp                        lzo                             pyenv                           visidata
+gdbm                            libsndfile                      m4                              python-certifi                  watchexec
+gettext                         libssh                          mosh                            python-click                    wget
+giflib                          libssh2                         mpdecimal                       python-markupsafe               xorgproto
+glib                            libtasn1                        mpg123                          python-setuptools               xz
+gmp                             libtermkey                      msgpack                         python-typing-extensions        zstd
+gnutls                          libtiff                         ncurses                         python@3.10
+goku                            libunistring                    neovim                          python@3.11
+
+==> Casks
+alacritty                       bluesnooze                      font-jetbrains-mono-nerd-font
+alt-tab                         chromium                        simplesynth
