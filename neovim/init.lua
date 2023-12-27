@@ -37,6 +37,7 @@ else
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'L3MON4D3/LuaSnip'
+    Plug 'tpope/vim-commentary'
 end
 Plug 'tpope/vim-repeat'
 Plug 'svermeulen/vim-easyclip'
@@ -109,6 +110,10 @@ map('n', '<leader>ex', ':tab Oil <CR>')
 map('n', '<leader>f', '<Plug>(easymotion-bd-f)', {})
 map('n', '<leader>W', '<Plug>(easymotion-bd-w)', {})
 
+
+-- Commentary
+map('v', '<leader>c', '<Plug>Commentary', {})
+map('n', '<leader>c', '<Plug>Commentary', {})
 
 -- Telescope mappings
 map('n', '<leader>tf', '<cmd>Telescope find_files<cr>')
