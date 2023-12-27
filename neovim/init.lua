@@ -70,6 +70,26 @@ vim.g.vimwiki_list = {
 }
 
 
+-- get relpath
+local function get_relative_path()
+    -- Get the full path of the current file
+    local full_path = vim.fn.expand('%:p')
+    -- Get the current working directory
+    local cwd = vim.fn.getcwd()
+    -- Convert the full path to a relative path
+    local relative_path = vim.fn.fnamemodify(full_path, ':.')
+    return relative_path
+end
+
+-- project name - defined as parent of cwd
+local function get_project_name()
+    -- Get the current working directory
+    local cwd = vim.fn.getcwd()
+    -- Extract the project name (last part of the path)
+    local project_name = cwd:match("([^/]+)$")
+    return project_name
+end
+
 -- Tokyonight plugin theme colorschema
 vim.cmd[[colorscheme tokyonight-night]]
 
@@ -96,8 +116,8 @@ map('n', '<leader>tf', '<cmd>Telescope find_files<cr>')
 map('n', '<leader>tg', ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 map('n', '<leader>tb', '<cmd>Telescope buffers<cr>')
 map('n', '<leader>th', '<cmd>Telescope help_tags<cr>')
-map('n', '<leader>te', '<cmd>tabnew | Telescope file_browser<cr>')
-map('n', '<leader>tre', '<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>')
+-- map('n', '<leader>te', '<cmd>tabnew | Telescope file_browser<cr>')
+map('n', '<leader>te', '<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>')
 
 
 
@@ -180,12 +200,12 @@ require'lualine'.setup {
     }
   },
   sections = {
-    lualine_a = {'mode'},
+    lualine_a = {'mode', 'tabs'},
     lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename'},
+    lualine_c = {get_relative_path},
     lualine_x = {'encoding', 'fileformat', 'filetype'},
     lualine_y = {'progress'},
-    lualine_z = {'location'}
+    lualine_z = {'location', get_project_name}
   },
   inactive_sections = {
     lualine_a = {},
@@ -202,46 +222,46 @@ require'lualine'.setup {
 }
 
 require'nvim-web-devicons'.setup {
- -- your personnal icons can go here (to override)
- -- you can specify color or cterm_color instead of specifying both of them
- -- DevIcon will be appended to `name`
- override = {
-  zsh = {
-    icon = "",
-    color = "#428850",
-    cterm_color = "65",
-    name = "Zsh"
-  }
- };
- -- globally enable different highlight colors per icon (default to true)
- -- if set to false all icons will have the default icon's color
- color_icons = true;
- -- globally enable default icons (default to false)
- -- will get overriden by `get_icons` option
- default = true;
- -- globally enable "strict" selection of icons - icon will be looked up in
- -- different tables, first by filename, and if not found by extension; this
- -- prevents cases when file doesn't have any extension but still gets some icon
- -- because its name happened to match some extension (default to false)
- strict = true;
- -- same as `override` but specifically for overrides by filename
- -- takes effect when `strict` is true
- override_by_filename = {
-  [".gitignore"] = {
-    icon = "",
-    color = "#f1502f",
-    name = "Gitignore"
-  }
- };
- -- same as `override` but specifically for overrides by extension
- -- takes effect when `strict` is true
- override_by_extension = {
-  ["log"] = {
-    icon = "",
-    color = "#81e043",
-    name = "Log"
-  }
- };
+  -- your personnal icons can go here (to override)
+  -- you can specify color or cterm_color instead of specifying both of them
+  -- DevIcon will be appended to `name`
+  override = {
+   zsh = {
+     icon = "",
+     color = "#428850",
+     cterm_color = "65",
+     name = "Zsh"
+   }
+  };
+  -- globally enable different highlight colors per icon (default to true)
+  -- if set to false all icons will have the default icon's color
+  color_icons = true;
+  -- globally enable default icons (default to false)
+  -- will get overriden by `get_icons` option
+  default = true;
+  -- globally enable "strict" selection of icons - icon will be looked up in
+  -- different tables, first by filename, and if not found by extension; this
+  -- prevents cases when file doesn't have any extension but still gets some icon
+  -- because its name happened to match some extension (default to false)
+  strict = true;
+  -- same as `override` but specifically for overrides by filename
+  -- takes effect when `strict` is true
+  override_by_filename = {
+   [".gitignore"] = {
+     icon = "",
+     color = "#f1502f",
+     name = "Gitignore"
+   }
+  };
+  -- same as `override` but specifically for overrides by extension
+  -- takes effect when `strict` is true
+  override_by_extension = {
+   ["log"] = {
+     icon = "",
+     color = "#81e043",
+     name = "Log"
+   }
+  };
 }
 
 
