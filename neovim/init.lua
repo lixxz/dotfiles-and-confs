@@ -21,6 +21,9 @@ else
     Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
     Plug 'nvim-telescope/telescope-file-browser.nvim'
     Plug 'nvim-telescope/telescope-live-grep-args.nvim'
+    Plug 'rmagatti/auto-session'
+
+    Plug 'rmagatti/session-lens'
 
     Plug 'easymotion/vim-easymotion'
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -134,6 +137,11 @@ map('n', '<leader>gd', '<cmd>Gvdiffsplit | :set relativenumber!<CR>', {})
 -- Trouble
 map('n', '<leader>tt', '<cmd>TroubleToggle<CR>')
 
+-- Vertical Split
+map('n', '<leader>vv', '<cmd>vsplit<CR>')
+-- Horizontal Split
+map('n', '<leader>hh', '<cmd>split<CR>')
+
 -- Lua-specific configurations
 if not vim.g.vscode then
     -- Disable netrw
@@ -142,6 +150,11 @@ if not vim.g.vscode then
 
     -- Set termguicolors
     vim.o.termguicolors = true
+
+    vim.o.splitright = true
+    vim.o.splitbelow = true
+
+    vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 end 
 
 
@@ -185,6 +198,23 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
+
+
+local as_opts = {
+  log_level = 'info',
+  auto_session_enable_last_session = false,
+  auto_session_root_dir = vim.fn.stdpath('data').."/sessions/",
+  auto_session_enabled = true,
+  auto_save_enabled = nil,
+  auto_restore_enabled = nil,
+  auto_session_suppress_dirs = nil,
+  auto_session_use_git_branch = nil,
+  -- the configs below are lua only
+  bypass_session_save_file_types = nil
+}
+
+require('auto-session').setup(as_opts)
+
 require'lualine'.setup {
   options = {
     icons_enabled = true,
@@ -210,7 +240,7 @@ require'lualine'.setup {
     lualine_c = {get_relative_path},
     lualine_x = {'encoding', 'fileformat', 'filetype'},
     lualine_y = {'progress'},
-    lualine_z = {'location', get_project_name}
+    lualine_z = {'location', require('auto-session.lib').current_session_name} -- get_project_name}
   },
   inactive_sections = {
     lualine_a = {},
@@ -521,4 +551,4 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
-
+ 
