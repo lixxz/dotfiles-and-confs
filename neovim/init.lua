@@ -15,6 +15,7 @@ else
     Plug 'folke/tokyonight.nvim'
     Plug 'stevearc/oil.nvim'
     Plug 'tpope/vim-fugitive'
+    Plug 'sindrets/diffview.nvim'
 
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
@@ -34,6 +35,11 @@ else
     Plug 'f-person/git-blame.nvim'
     Plug 'folke/trouble.nvim'
 
+    Plug 'lewis6991/gitsigns.nvim'
+    Plug 'romgrk/barbar.nvim'
+
+    Plug 'akinsho/toggleterm.nvim', {'tag' : 'v2.10.*'}
+
     " lsp
     Plug 'neovim/nvim-lspconfig'
     Plug 'hrsh7th/nvim-cmp'
@@ -41,6 +47,7 @@ else
     Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'L3MON4D3/LuaSnip'
     Plug 'tpope/vim-commentary'
+    Plug 'scalameta/nvim-metals'
 end
 Plug 'tpope/vim-repeat'
 Plug 'svermeulen/vim-easyclip'
@@ -94,6 +101,18 @@ local function get_project_name()
     return project_name
 end
 
+-- Define a function to open the parent directory
+function open_parent_directory_oil()
+    local current_file = vim.fn.expand('%:p')
+    local parent_directory = vim.fn.fnamemodify(current_file, ':h')
+    vim.cmd('tab Oil '.. parent_directory)
+end
+
+
+function clear_all_but_current_buffer()
+    vim.cmd('')
+end
+
 -- Tokyonight plugin theme colorschema
 vim.cmd[[colorscheme tokyonight-night]]
 
@@ -102,12 +121,15 @@ map('n', '<leader>rr', ':set relativenumber!<CR>')
 map('n', '<leader>ec', ':e $MYVIMRC<CR>')
 map('n', '<leader>sc', ':source $MYVIMRC<CR>')
 for i = 1, 9 do
-    map('n', '<leader>'..i, i..'gt')
+    map('n', '<leader>'..i, ':BufferGoto '..i..'<CR>')
 end
-map('n', '<leader>0', ':tablast<CR>')
+-- map('n', '<leader>0', ':tablast<CR>')
 map('n', '<leader>tn', ':tabnew<CR>')
+map('n', '<leader><Tab>', ':BufferNext<CR>')
+map('n', '<leader><S-Tab>', ':BufferPrevious<CR>')
+
 map('n', '<leader>nl', ':noh<CR>')
-map('n', '<leader>ex', ':tab Oil <CR>')
+map('n', '<leader>ex', ':lua open_parent_directory_oil()<CR>')
 
 -- easymotion
 map('n', '<leader>f', '<Plug>(easymotion-bd-f)', {})
@@ -120,19 +142,42 @@ map('n', '<leader>c', '<Plug>Commentary', {})
 
 -- Telescope mappings
 map('n', '<leader>tf', '<cmd>Telescope find_files<cr>')
--- map('n', '<leader>tg', '<cmd>Telescope live_grep<cr>')
 map('n', '<leader>tg', ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 map('n', '<leader>tb', '<cmd>Telescope buffers<cr>')
 map('n', '<leader>th', '<cmd>Telescope help_tags<cr>')
--- map('n', '<leader>te', '<cmd>tabnew | Telescope file_browser<cr>')
 map('n', '<leader>te', '<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>')
+map('n', '<leader>tsw', '<cmd>Telescope git_branches<cr>')
 
+-- switch sessions
+map('n', '<leader>tss', '<cmd>Telescope session-lens search_session<cr>')
+
+-- new line
+map('n', '<C-e>', '<cmd>exe "normal a".nr2char(getchar())<CR>')
 
 
 -- vim fugitive
-map('n', '<leader>gb', '<cmd>Git blame<CR>')
-map('n', '<leader>gs', '<cmd>Git status<CR>')
-map('n', '<leader>gd', '<cmd>Gvdiffsplit | :set relativenumber!<CR>', {})
+-- map('n', '<leader>gb', '<cmd>Git blame<CR>')
+-- map('n', '<leader>gs', '<cmd>Git status<CR>')
+-- map('n', '<leader>gd', '<cmd>Gvdiffsplit | :set relativenumber!<CR>', {})
+
+-- toggleterm lazygit setting
+local Terminal  = require('toggleterm.terminal').Terminal
+local lazygit = Terminal:new({
+  cmd = "lazygit",
+  dir = "git_dir",
+  direction = "float",
+  float_opts = {
+    border = "double",
+  }
+})
+
+function _lazygit_toggle()
+  lazygit:toggle()
+end
+
+map("n", "<leader>g", "<cmd>lua _lazygit_toggle()<CR>")
+map("n", "<leader>`", "<cmd>ToggleTerm<CR>")
+
 
 -- Trouble
 map('n', '<leader>tt', '<cmd>TroubleToggle<CR>')
@@ -199,6 +244,11 @@ require'nvim-treesitter.configs'.setup {
 }
 
 
+require("toggleterm").setup{}
+
+require("barbar").setup {
+  -- hide = {extensions = true, inactive = true},
+}
 
 local as_opts = {
   log_level = 'info',
@@ -217,7 +267,7 @@ require('auto-session').setup(as_opts)
 
 require'lualine'.setup {
   options = {
-    icons_enabled = true,
+    icons_enabled = false,
     theme = 'nightfly',
     component_separators = { left = '', right = ''},
     section_separators = { left = '', right = ''},
@@ -235,7 +285,7 @@ require'lualine'.setup {
     }
   },
   sections = {
-    lualine_a = {'mode', 'tabs'},
+    lualine_a = {'mode', {'buffers', mode=1}},
     lualine_b = {'branch', 'diff', 'diagnostics'},
     lualine_c = {get_relative_path},
     lualine_x = {'encoding', 'fileformat', 'filetype'},
@@ -442,18 +492,37 @@ require'gitblame'.setup {
     enabled = true,
 }
 
+local telescope = require("telescope")
+telescope.setup({
+defaults = {
+    layout_strategy = 'horizontal',
+    layout_config = {
+      horizontal = {
+        width = 0.99,
+        height = 0.99,
+        preview_width = 0.5,
+      },
+      vertical = {
+        width = 0.9,
+        height = 0.9,
+        preview_height = 0.5,
+      },
+    },
+     -- Enable text wrapping in the preview window
+    -- buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker,
+  },
+})
 
 -- Load fzf for telescope
-require('telescope').load_extension "fzf"
-require("telescope").load_extension "file_browser"
+telescope.load_extension "fzf"
+telescope.load_extension "file_browser"
 
 
 -- Setup language servers.
--- LSP specific confs
-require'lspconfig'.pyright.setup{}
-
 local lspconfig = require('lspconfig')
-lspconfig.pyright.setup {}
+
+-- Scala setup with Metals.
+vim.cmd([[autocmd FileType scala,sbt lua require("metals").initialize_or_attach({})]])
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -496,15 +565,17 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-local lspconfig = require('lspconfig')
-
--- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
+-- Enable language servers with the additional completion capabilities.
+local servers = { 'clangd', 'rust_analyzer', 'tsserver', 'pyright'}
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    -- on_attach = my_custom_on_attach,
-    capabilities = capabilities,
-  }
+  local setupConfig = {capabilities = capabilities}
+  
+  -- Special configuration for Pyright to disable type checking.
+  if lsp == 'pyright' then
+    setupConfig.settings = {python = {analysis = {typeCheckingMode = "off"}}}
+  end
+  
+  lspconfig[lsp].setup(setupConfig)
 end
 
 -- luasnip setup
