@@ -1,0 +1,11 @@
+# Copy to ~/.config/agent-sessions/config and adjust for each Mac.
+HERDR_TARGET='azureadmin@bhume-devbox-yash'
+DEVBOX_NAME='bhume-devbox-yash'
+TERMINAL_APP='Ghostty'
+REFRESH_SECONDS='15'
+
+# Optional executable overrides for Intel Homebrew or nonstandard installs.
+# TMUX_BIN='/usr/local/bin/tmux'
+# FZF_BIN='/usr/local/bin/fzf'
+# TAILSCALE_BIN='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
+# PYTHON_BIN='/usr/bin/python3'

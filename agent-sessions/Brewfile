@@ -1,0 +1,6 @@
+brew "tmux"
+brew "fzf"
+
+cask "hammerspoon"
+cask "tailscale-app"
+cask "ghostty"
