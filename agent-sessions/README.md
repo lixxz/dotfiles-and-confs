@@ -2,12 +2,12 @@
 
 This bundle surfaces Codex session titles and activity from two places:
 
-- local Codex processes running in tmux windows;
+- local Codex processes running in tmux panes;
 - Codex processes managed by HerdR inside an SSH session on a devbox.
 
 It adds a unified `prefix + w` picker and a compact macOS menu-bar item. The
 menu bar shows working and idle counts (`●5 ○2`); its dropdown shows full
-titles and switches directly to the selected local tmux window or remote HerdR
+titles and switches directly to the selected local tmux pane or remote HerdR
 agent.
 
 ## Requirements
@@ -71,7 +71,7 @@ hs -c 'hs.reload()'
 - `●` means working; `○` means idle or waiting for attention.
 
 The remote rows are fetched live with `herdr agent list`. Selecting one calls
-`herdr agent focus`, switches the attached local tmux client to the SSH window,
+`herdr agent focus`, switches the attached local tmux client to the SSH pane,
 and activates the configured terminal application.
 
 Verify discovery without opening the picker:
@@ -86,7 +86,7 @@ Verify discovery without opening the picker:
 The installer never overwrites it. Supported settings are documented in
 [`config.example`](config.example).
 
-`HERDR_TARGET` is the only intentional host coupling. tmux window identifiers
+`HERDR_TARGET` is the only intentional host coupling. tmux pane identifiers
 and HerdR pane identifiers are discovered again on each refresh.
 
 ## Remove

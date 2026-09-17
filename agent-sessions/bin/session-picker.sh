@@ -72,27 +72,29 @@ while IFS= read -r record; do
     record=${record#*"$sep"}
     window_name=${record%%"$sep"*}
     record=${record#*"$sep"}
+    pane_id=${record%%"$sep"*}
+    record=${record#*"$sep"}
     pane_title=${record%%"$sep"*}
-    agent_style=${record#*"$sep"}
+    agent_state=${record#*"$sep"}
     marker='  '
-    if [[ "$agent_style" == *'colour114'* ]]; then
+    if [ "$agent_state" = busy ]; then
         marker='● '
-    elif [[ "$agent_style" == *'colour214'* ]]; then
+    elif [ "$agent_state" = idle ]; then
         marker='○ '
     fi
 
     if [[ "$pane_title" == *"$DEVBOX_NAME"* ]]; then
-        ssh_tmux_target=$target
+        ssh_tmux_target=$pane_id
         title='HerdR devbox'
-    elif [ -n "$agent_style" ] && [ -n "$pane_title" ]; then
+    elif [ -n "$agent_state" ] && [ -n "$pane_title" ]; then
         title=$pane_title
     else
         title=$window_name
     fi
     title=${title//$'\t'/ }
     title=${title//$'\n'/ }
-    printf 'local\t%s\t-\tLOCAL   %s%-7s %s\n' "$target" "$marker" "$target" "$title" >> "$rows"
-done < <("$TMUX_BIN" list-windows -a -F "#{session_name}:#{window_index}${sep}#{window_name}${sep}#{pane_title}${sep}#{@agent_style}")
+    printf 'local\t%s\t-\tLOCAL   %s%s %s\n' "$pane_id" "$marker" "$target" "$title" >> "$rows"
+done < <("$TMUX_BIN" list-panes -a -F "#{session_name}:#{window_index}.#{pane_index}${sep}#{window_name}${sep}#{pane_id}${sep}#{pane_title}${sep}#{@agent_state}")
 
 remote_ok=0
 if [ -n "$ssh_tmux_target" ] && [ -x "$TAILSCALE_BIN" ] && [ -x "$PYTHON_BIN" ]; then
